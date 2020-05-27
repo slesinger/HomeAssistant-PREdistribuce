@@ -25,7 +25,7 @@ binary_sensor:
 ```
 
 ```yaml
-# Example configuration.yaml entry as above + extra binary sensors that show if a an applience (e.g. washing machine) can be run now to finish under low tariff
+# entry as above + extra binary sensors that show if a an applience (e.g. washing machine) can be run now to finish under low tariff
 binary_sensor:
   - platform: predistribuce
     receiver_command_id: 605
