@@ -1,0 +1,8 @@
+{
+    "domain": "predistribuce",
+    "name": "PRE Distribuce",
+    "documentation": "https://github.com/slesinger/HomeAssistant-PREdistribuce",
+    "dependencies": [],
+    "codeowners": ["@slesinger"],
+    "requirements": ["lxml==4.5.1"]
+  }
