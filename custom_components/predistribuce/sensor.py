@@ -1,11 +1,12 @@
 __version__ = "1.0"
 
+import math
 import logging
 import voluptuous as vol
 from datetime import timedelta, datetime, date
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 import homeassistant.helpers.config_validation as cv
-from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.helpers.entity import Entity
 from homeassistant.util import Throttle
 
 import requests
@@ -39,14 +40,11 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 
 def setup_platform(hass, config, add_entities, discovery_info=None):
     conf_cmd = config.get(CONF_CMD)
-    conf_periods = config.get(CONF_PERIODS)
     ents = []
-    ents.append(PreDistribuce(conf_cmd, 0, "HDO aktuálně"))
-    for pre in conf_periods:
-        ents.append(PreDistribuce(conf_cmd, pre.get(CONF_MINUTES), pre.get(CONF_NAME)))
+    ents.append(PreDistribuce(conf_cmd, 0, "HDO čas do nízkého tarifu"))
     add_entities(ents)
 
-class PreDistribuce(BinarySensorEntity):
+class PreDistribuce(Entity):
 
     def __init__(self, conf_cmd, minutes, name):
         """Initialize the sensor."""
@@ -64,12 +62,16 @@ class PreDistribuce(BinarySensorEntity):
         return self._name
 
     @property
-    def icon(self):
-        return "mdi:flash-red-eye"
+    def unit_of_measurement(self):
+        return "minut"
 
     @property
-    def is_on(self):
-        """Return entity state."""
+    def icon(self):
+        return "mdi:av-timer"
+
+    @property
+    def state(self):
+        """Return time to wait until low tariff."""
         hdoNizkyVysoky = self.tree.xpath('//div[@id="component-hdo-dnes"]/div[@class="hdo-bar"]/span[starts-with(@class, "hdo")]/@class')
         hdoCasyCitelne = self.tree.xpath('//div[@id="component-hdo-dnes"]/div/span[@class="span-overflow"]/@title')
         hdoNizkyVysoky = [ x[3].upper() for x in hdoNizkyVysoky ]
@@ -86,32 +88,14 @@ class PreDistribuce(BinarySensorEntity):
 
         zacne = datetime.strptime(hdoCasyZacatky[idxTed], '%H:%M').time()
         zbyvaMinut = (datetime.combine(date.today(), zacne) - datetime.combine(date.today(), time_now)).seconds / 60
-
-        if self.minutes == 0:
-            if hdoTed == 'N':
-                return True
-            else:
-                return False
+        if hdoTed == 'N':
+            self.timeToNT = 0
         else:
-            # Reflect gap in minute that low tariff need to be active
-            if hdoTed == 'N':
-                #kdy zacne vysoky tarif?
-                if self.minutes < zbyvaMinut:
-                    return True   # Currently there is low tariff and it will still be longer than we need
-                else:
-                    return False   # Currently there is low tariff but not enough as we need
-            else:
-                #kdy zacne nizky?
-                return False
+            self.timeToNT = zbyvaMinut
 
-        return None
+        return math.floor(self.timeToNT)
 
-    @property
-    def device_state_attributes(self):
-        attributes = {}
-        if self.minutes == 0:
-            attributes['html_values'] = self.html
-        return attributes
+
     @property
     def should_poll(self):
         return True
