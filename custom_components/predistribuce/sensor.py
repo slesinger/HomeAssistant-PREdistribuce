@@ -83,18 +83,27 @@ class PreDistribuce(Entity):
         for idx,t in enumerate(hdoCasyZacatky, start=0):
             time_start = datetime.strptime(t, '%H:%M').time()
             if time_now < time_start:
-                hdoTed = hdoNizkyVysoky[idx-1]
+                hdoTed = hdoNizkyVysoky[idx - 1]
+                idxTed = idx
                 break
 
         zacne = datetime.strptime(hdoCasyZacatky[idxTed], '%H:%M').time()
         zbyvaMinut = (datetime.combine(date.today(), zacne) - datetime.combine(date.today(), time_now)).seconds / 60
         if hdoTed == 'N':
             self.timeToNT = 0
+            self.timetoVT = zbyvaMinut
         else:
             self.timeToNT = zbyvaMinut
+            self.timetoVT = 0
 
         return math.floor(self.timeToNT)
 
+
+    @property
+    def device_state_attributes(self):
+        attributes = {}
+        attributes['HDO čas do vysokého tarifu'] = math.floor(self.timetoVT)
+        return attributes
 
     @property
     def should_poll(self):
