@@ -1,6 +1,6 @@
 {
     "name": "PRE Distribuce CZ",
-    "render_readme": true,
+    "render_readme": false,
     "domains": [
 	"binary_sensor"
     ],
