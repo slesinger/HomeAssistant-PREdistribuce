@@ -82,6 +82,7 @@ class PreDistribuce(BinarySensorEntity):
             time_start = datetime.strptime(t, '%H:%M').time()
             if time_now < time_start:
                 hdoTed = hdoNizkyVysoky[idx-1]
+                idxTed = idx
                 break
 
         zacne = datetime.strptime(hdoCasyZacatky[idxTed], '%H:%M').time()
