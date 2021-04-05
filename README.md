@@ -37,3 +37,21 @@ binary_sensor:
       - name: HDO Myčka
         minutes: 150
 ```
+
+### PRE Schedule Bar
+You can display visually low/high tarrif overview throughout the day.
+
+![screenshot](pre_html.png)
+
+Prerequisite is to install [Lovelace Html Card](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-HTML-Jinja2-Template-card), ideally from HACS.
+Once installed, create a new Lovelace card manually. Paste following content inside:
+```
+type: 'custom:html-card'
+title: PRE tarif
+content: |
+  [[binary_sensor.hdo_aktualne.attributes.html_values]]
+
+```
+Do not forget to replace ```hdo_aktualne``` by your entity name.
+
+
