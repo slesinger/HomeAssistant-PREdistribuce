@@ -22,6 +22,28 @@ CONF_PERIODS = "periods"
 CONF_NAME = "name"
 CONF_MINUTES = "minutes"
 
+STYLES = """
+  <style>
+    .hdo-bar > span.span-overflow { z-index: 101; }
+    .hdont { background: #242f65; }
+    .hdovt { background: #9babc5; }
+    .hdo-bar { margin-bottom: 10px; margin-top: 20px; height: 80px; clear: both; position: relative; }
+    .hdo-bar span { border-radius: 0 3px 3px 0; }
+    .hdo-bar span { height: 29px; margin: 0; padding: 0; display: inline-block; border: 0; position: absolute; top: 20px; right: 0; z-index: 99; }
+    .hdo-bar span:first-of-type { border-radius: 3px; }
+    .hdo-bar span.span-actualTime { border-left: 2px solid red; z-index: 100; height: 39px; top: 16px; }
+    .overflow-bar { width: 100%; height: 55px; background: url('https://www.predistribuce.cz/images/hdo_bar.png') 0 0 no-repeat; background-size: 100% 55px; position: absolute; left: 0; top: 20px; z-index: 101; }
+    .blue-text { color: #242f65; }
+    .pull-left { float: left !important; }
+    .pull-right { float: right !important; }
+    .status .wrapper.dark-blue { background: #242F65; }
+    .status .wrapper.light-blue { background: #9CACC5; }
+    .hdo-sections.wrapper { padding: 6px 7px; margin: 0 5px 0 10px; }
+    #component-hdo-dnes { min-width: 300px; width: auto; max-width: 650px; margin-left: -10px; margin-right: -10px; }
+    .clear { clear: both; }
+  </style> 
+"""
+
 PERIOD_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_NAME): cv.string,
@@ -111,7 +133,7 @@ class PreDistribuce(BinarySensorEntity):
     def device_state_attributes(self):
         attributes = {}
         if self.minutes == 0:
-            attributes['html_values'] = self.html
+            attributes['html_values'] = STYLES + self.html
         return attributes
     @property
     def should_poll(self):
@@ -135,6 +157,7 @@ class PreDistribuce(BinarySensorEntity):
         if page.status_code == 200:
             self.tree = html.fromstring(page.content)
             self.html = etree.tostring(self.tree.xpath('//div[@id="component-hdo-dnes"]')[0]).decode("utf-8").replace('\n', '').replace('\t', '').replace('"/>', '"></span>')
+            self.html = self.html.replace('<div class="overflow-bar"></span>', '<div class="overflow-bar"></div>')
             #_LOGGER.warn("UPDATING POST {}".format(self.html))
             self.last_update_success = True
         else:
