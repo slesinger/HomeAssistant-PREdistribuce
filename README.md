@@ -12,6 +12,8 @@ This sensor always show
 optionally also
 -  if a an applience (e.g. washing machine) can be run now to finish under low tariff
 
+> Note: Are you customer of CEZ? Look here: https://github.com/zigul/HomeAssistant-CEZdistribuce
+
 ### Installation
 
 Copy this folder to `<config_dir>/custom_components/predistribuce/`.
