@@ -11,7 +11,7 @@ from homeassistant.util import Throttle
 import requests
 from lxml import html, etree
 
-MIN_TIME_BETWEEN_SCANS = timedelta(seconds=3600)
+MIN_TIME_BETWEEN_SCANS = timedelta(seconds=15*60)  # cervena carka ukazujici aktualni cas se stahuje take.
 _LOGGER = logging.getLogger(__name__)
 
 URL = "https:/predistribuce.cz/blabla/dd"
