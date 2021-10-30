@@ -61,7 +61,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 
 def setup_platform(hass, config, add_entities, discovery_info=None):
     conf_cmd = config.get(CONF_CMD)
-    conf_periods = config.get(CONF_PERIODS)
+    conf_periods = config.get(CONF_PERIODS, [])
     ents = []
     ents.append(PreDistribuce(conf_cmd, 0, "HDO aktuálně"))
     for pre in conf_periods:
