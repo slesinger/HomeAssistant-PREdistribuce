@@ -15,8 +15,6 @@ from lxml import html, etree
 MIN_TIME_BETWEEN_SCANS = timedelta(seconds=3600)
 _LOGGER = logging.getLogger(__name__)
 
-URL = "https:/predistribuce.cz/blabla/dd"
-
 DOMAIN = "predistribuce"
 CONF_CMD = "receiver_command_id"
 CONF_PERIODS = "periods"
@@ -123,7 +121,7 @@ class PreDistribuce(Entity):
     def update(self):
         """Update the entity by scraping website"""
         today = date.today()
-        page = requests.get("https://www.predistribuce.cz/cs/potrebuji-zaridit/zakaznici/stav-hdo/?povel=605&den_od={0}&mesic_od={1}&rok_od={2}&den_do={0}&mesic_do={1}&rok_do={2}".format(today.day,today.month,today.year))
+        page = requests.get("https://www.predistribuce.cz/cs/potrebuji-zaridit/zakaznici/stav-hdo/?povel={3}&den_od={0}&mesic_od={1}&rok_od={2}&den_do={0}&mesic_do={1}&rok_do={2}".format(today.day,today.month,today.year,self.conf_cmd))
         if page.status_code == 200:
             self.tree = html.fromstring(page.content)
             self.html = etree.tostring(self.tree.xpath('//div[@id="component-hdo-dnes"]')[0]).decode("utf-8").replace('\n', '').replace('\t', '').replace('"/>', '"></span>')
