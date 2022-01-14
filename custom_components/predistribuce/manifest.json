@@ -5,6 +5,6 @@
     "issue_tracker": "https://github.com/slesinger/HomeAssistant-PREdistribuce/issues",
     "dependencies": [],
     "codeowners": ["@slesinger"],
-    "version": "1.0.0",
-    "requirements": ["lxml==4.5.1"]
+    "version": "1.0.1",
+    "requirements": ["lxml==4.7.1"]
 }
