@@ -130,7 +130,7 @@ class PreDistribuce(BinarySensorEntity):
         return None
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         attributes = {}
         if self.minutes == 0:
             attributes['html_values'] = STYLES + self.html
