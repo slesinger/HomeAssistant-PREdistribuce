@@ -18,6 +18,7 @@ URL = "https:/predistribuce.cz/blabla/dd"
 
 DOMAIN = "predistribuce"
 CONF_CMD = "receiver_command_id"
+CONF_SENSOR_NAME = "sensor_name"
 CONF_PERIODS = "periods"
 CONF_NAME = "name"
 CONF_MINUTES = "minutes"
@@ -54,6 +55,7 @@ PERIOD_SCHEMA = vol.Schema(
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
         vol.Required(CONF_CMD): cv.string,
+        vol.Optional(CONF_SENSOR_NAME): cv.string,
         vol.Optional(CONF_PERIODS): vol.All(cv.ensure_list, [PERIOD_SCHEMA])
     }
 )
@@ -61,9 +63,10 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 
 def setup_platform(hass, config, add_entities, discovery_info=None):
     conf_cmd = config.get(CONF_CMD)
+    conf_name = config.get(CONF_SENSOR_NAME, "aktuálně")
     conf_periods = config.get(CONF_PERIODS, [])
     ents = []
-    ents.append(PreDistribuce(conf_cmd, 0, "HDO aktuálně"))
+    ents.append(PreDistribuce(conf_cmd, 0, conf_name))
     for pre in conf_periods:
         ents.append(PreDistribuce(conf_cmd, pre.get(CONF_MINUTES), pre.get(CONF_NAME)))
     add_entities(ents)
@@ -74,6 +77,9 @@ class PreDistribuce(BinarySensorEntity):
         """Initialize the sensor."""
         self.conf_cmd = conf_cmd
         self.minutes = minutes
+        self.entity_id = f"binary_sensor.hdo_{conf_cmd}"
+        self._attr_unique_id = f"{DOMAIN}-hbo-{conf_cmd}"
+        self._name = f"HBO {name}"
         self._name = name
         self.timeToNT = 0
         self.html = "<div><i>Není spojení</i></div>"
