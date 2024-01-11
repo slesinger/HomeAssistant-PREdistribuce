@@ -98,7 +98,7 @@ class PreDistribuce(Entity):
 
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         attributes = {}
         attributes['HDO čas do vysokého tarifu'] = math.floor(self.timetoVT)
         return attributes
