@@ -1,7 +1,5 @@
 # PRE Distribuce - Home Assistant Sensor
 
-# Notice: I am no longer using PRE services. I am looking for someone with higher motivation, who will take over maintenance of this repository. Thank you.
-
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
 
 This sensor is scraping data from https://www.predistribuce.cz/cs/potrebuji-zaridit/zakaznici/stav-hdo/. Put id of receiver command (see contract with PRE CZ or your energy meter) in configuration.yaml
